@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/avatar_img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        tools:src="@drawable/avatar_default" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="aabbccdd"
+        android:id="@+id/tv_username"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_alignTop="@id/avatar_img"
+        android:layout_toEndOf="@id/avatar_img"
+        android:layout_toRightOf="@id/avatar_img" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="内容不错很好看"
+        android:id="@+id/content_tv"
+        style="@style/Comment.Content"
+        android:layout_below="@id/tv_username"
+        android:layout_marginTop="4dp"
+        android:layout_alignStart="@id/tv_username"
+        android:layout_alignLeft="@id/tv_username" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="12小时前"
+        android:id="@+id/tv_time"
+        style="@style/Comment.Time"
+        android:layout_below="@id/content_tv"
+        android:layout_alignStart="@id/tv_username"
+        android:layout_alignLeft="@id/tv_username" />
+
+</RelativeLayout>
