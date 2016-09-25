@@ -132,7 +132,7 @@ public class PrettyControlView extends RelativeLayout {
 
     private void hideDeferredIfPlaying() {
         removeCallbacks(hideAction);
-        if (player.getPlayWhenReady()) {
+        if (player.getPlaybackState() == ExoPlayer.STATE_READY && player.getPlayWhenReady()) {
             postDelayed(hideAction, showDurationMs);
         }
     }
@@ -272,11 +272,7 @@ public class PrettyControlView extends RelativeLayout {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            updatePlayPauseButton();
-            updateProgress();
-            if (playbackState == ExoPlayer.STATE_READY) {
-                hideDeferredIfPlaying();
-            }
+            show();
         }
 
         @Override
