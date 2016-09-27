@@ -1,0 +1,7 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="auto_play_switch"
+        android:summary="@string/pref_description_auto_play"
+        android:title="@string/pref_title_auto_play" />
+</PreferenceScreen>

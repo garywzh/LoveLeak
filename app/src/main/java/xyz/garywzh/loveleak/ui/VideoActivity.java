@@ -56,6 +56,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+import xyz.garywzh.loveleak.AppContext;
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.model.Comment;
 import xyz.garywzh.loveleak.model.CommentListBean;
@@ -111,8 +112,8 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        shouldAutoPlay = AppContext.getInstance().getAutoPlay();
 
-        shouldAutoPlay = false;
         userAgent = Util.getUserAgent(this, "LoveLeak");
         mediaDataSourceFactory = buildDataSourceFactory(true);
         mainHandler = new Handler();
