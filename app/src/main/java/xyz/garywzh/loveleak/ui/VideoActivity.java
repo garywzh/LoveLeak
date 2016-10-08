@@ -250,6 +250,15 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isFullScreen) {
+            toggleFullScreen();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void loadData() {
         Observable<CommentListBean> observable = NetworkHelper.getApi()
                 .getComments(mItem.vid, mCount * NetworkHelper.COMMENT_ONCE_LOAD_COUNT, NetworkHelper.COMMENT_ONCE_LOAD_COUNT);
