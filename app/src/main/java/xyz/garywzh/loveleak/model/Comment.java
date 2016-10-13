@@ -20,20 +20,6 @@ public class Comment {
     public String addedon;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Comment comment = (Comment) o;
-
-        if (user_name != null ? !user_name.equals(comment.user_name) : comment.user_name != null)
-            return false;
-        if (text != null ? !text.equals(comment.text) : comment.text != null) return false;
-        return addedon != null ? addedon.equals(comment.addedon) : comment.addedon == null;
-
-    }
-
-    @Override
     public int hashCode() {
         int result = user_name != null ? user_name.hashCode() : 0;
         result = 31 * result + (text != null ? text.hashCode() : 0);
