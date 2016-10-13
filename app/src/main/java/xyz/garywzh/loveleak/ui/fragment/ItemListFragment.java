@@ -29,6 +29,7 @@ import xyz.garywzh.loveleak.model.VideoListBean;
 import xyz.garywzh.loveleak.network.NetworkHelper;
 import xyz.garywzh.loveleak.ui.VideoActivity;
 import xyz.garywzh.loveleak.ui.adapter.VideoItemAdapter;
+import xyz.garywzh.loveleak.util.ListUtils;
 import xyz.garywzh.loveleak.util.LogUtils;
 
 /**
@@ -44,6 +45,7 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
     public static final int TYPE_RECENT = 2;
     public static final int TYPE_SEARCH = 3;
 
+    private static final int DUPLICATE_CHECK_LENGTH = 3;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private VideoItemAdapter mAdapter;
     private Context mContext;
@@ -177,6 +179,17 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
                         return videoListBean.result;
                     }
                 })
+                .doOnNext(new Action1<List<VideoItem>>() {
+                    @Override
+                    public void call(List<VideoItem> videoItems) {
+                        if (mCount == 0) {
+                            mItems.clear();
+                        }
+                        if (videoItems.size() > 0) {
+                            ListUtils.mergeListWithoutDuplicates(mItems, videoItems, DUPLICATE_CHECK_LENGTH);
+                        }
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<VideoItem>>() {
                     @Override
@@ -195,9 +208,7 @@ public class ItemListFragment extends Fragment implements SwipeRefreshLayout.OnR
                     public void onNext(List<VideoItem> items) {
                         if (mCount == 0) {
                             linearLayoutManager.scrollToPositionWithOffset(0, 0);
-                            mItems.clear();
                         }
-                        mItems.addAll(items);
                         mAdapter.setDataSource(mItems);
                         firstLoad = false;
                         mCount++;

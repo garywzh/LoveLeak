@@ -45,6 +45,21 @@ public class VideoItem implements Parcelable {
     public String videourl;
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        VideoItem videoItem = (VideoItem) o;
+
+        return vid.equals(videoItem.vid);
+    }
+
+    @Override
+    public int hashCode() {
+        return vid.hashCode();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
