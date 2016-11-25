@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 
 import xyz.garywzh.loveleak.R;
@@ -170,12 +168,12 @@ public class PrettyPlayerView extends FrameLayout {
         }
 
         @Override
-        public void onRenderedFirstFrame(Surface surface) {
+        public void onRenderedFirstFrame() {
             shutterView.setVisibility(GONE);
         }
 
         @Override
-        public void onVideoDisabled(DecoderCounters counters) {
+        public void onVideoTracksDisabled() {
             shutterView.setVisibility(VISIBLE);
         }
     }

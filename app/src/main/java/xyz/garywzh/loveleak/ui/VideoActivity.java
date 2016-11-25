@@ -91,7 +91,7 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
     private boolean playerNeedsSource;
 
     private boolean shouldAutoPlay;
-    private boolean shouldRestorePosition;
+    private boolean isTimelineStatic;
     private int playerWindow;
     private long playerPosition;
     private boolean isFullScreen;
@@ -207,7 +207,7 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
     @Override
     public void onNewIntent(Intent intent) {
         releasePlayer();
-        shouldRestorePosition = false;
+        isTimelineStatic = false;
         setIntent(intent);
     }
 
@@ -339,7 +339,7 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
             player.setId3Output(eventLogger);
             prettyPlayerView.setPlayer(player);
             prettyPlayerView.setFullscreenToggleListener(this);
-            if (shouldRestorePosition) {
+            if (isTimelineStatic) {
                 if (playerPosition == C.TIME_UNSET) {
                     player.seekToDefaultPosition(playerWindow);
                 } else {
@@ -356,7 +356,7 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
             }
             MediaSource mediaSource = buildMediaSource(mUrl, null);
 
-            player.prepare(mediaSource, !shouldRestorePosition);
+            player.prepare(mediaSource, !isTimelineStatic, !isTimelineStatic);
             playerNeedsSource = false;
         }
     }
@@ -365,15 +365,15 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
         int type = Util.inferContentType(!TextUtils.isEmpty(overrideExtension) ? "." + overrideExtension
                 : uri.getLastPathSegment());
         switch (type) {
-            case Util.TYPE_SS:
+            case C.TYPE_SS:
                 return new SsMediaSource(uri, buildDataSourceFactory(false),
                         new DefaultSsChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
-            case Util.TYPE_DASH:
+            case C.TYPE_DASH:
                 return new DashMediaSource(uri, buildDataSourceFactory(false),
                         new DefaultDashChunkSource.Factory(mediaDataSourceFactory), mainHandler, eventLogger);
-            case Util.TYPE_HLS:
+            case C.TYPE_HLS:
                 return new HlsMediaSource(uri, mediaDataSourceFactory, mainHandler, eventLogger);
-            case Util.TYPE_OTHER:
+            case C.TYPE_OTHER:
                 return new ExtractorMediaSource(uri, mediaDataSourceFactory, new DefaultExtractorsFactory(),
                         mainHandler, eventLogger);
             default: {
@@ -385,13 +385,13 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
     private void releasePlayer() {
         if (player != null) {
             shouldAutoPlay = player.getPlayWhenReady();
-            shouldRestorePosition = false;
+            isTimelineStatic = false;
             Timeline timeline = player.getCurrentTimeline();
             if (timeline != null) {
                 playerWindow = player.getCurrentWindowIndex();
                 Timeline.Window window = timeline.getWindow(playerWindow, new Timeline.Window());
                 if (!window.isDynamic) {
-                    shouldRestorePosition = true;
+                    isTimelineStatic = true;
                     playerPosition = window.isSeekable ? player.getCurrentPosition() : C.TIME_UNSET;
                 }
             }

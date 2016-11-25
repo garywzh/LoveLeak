@@ -25,8 +25,9 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.TrackGroup;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector.TrackInfo;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelections;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
 
@@ -35,10 +36,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class EventLogger implements ExoPlayer.EventListener, AudioRendererEventListener,
-        VideoRendererEventListener, AdaptiveMediaSourceEventListener,
+/**
+ * Logs player events using {@link Log}.
+ */
+public final class EventLogger implements ExoPlayer.EventListener,
+        AudioRendererEventListener, VideoRendererEventListener, AdaptiveMediaSourceEventListener,
         ExtractorMediaSource.EventListener, StreamingDrmSessionManager.EventListener,
-        MappingTrackSelector.EventListener, MetadataRenderer.Output<List<Id3Frame>> {
+        TrackSelector.EventListener<MappingTrackSelector.MappedTrackInfo>, MetadataRenderer.Output<List<Id3Frame>> {
 
     private static final String TAG = "EventLogger";
     private static final int MAX_TIMELINE_ITEM_LINES = 3;
@@ -110,23 +114,24 @@ public class EventLogger implements ExoPlayer.EventListener, AudioRendererEventL
     // MappingTrackSelector.EventListener
 
     @Override
-    public void onTracksChanged(TrackInfo trackInfo) {
+    public void onTrackSelectionsChanged(TrackSelections<? extends MappingTrackSelector.MappedTrackInfo> trackSelections) {
         Log.d(TAG, "Tracks [");
         // Log tracks associated to renderers.
-        for (int rendererIndex = 0; rendererIndex < trackInfo.rendererCount; rendererIndex++) {
-            TrackGroupArray trackGroups = trackInfo.getTrackGroups(rendererIndex);
-            TrackSelection trackSelection = trackInfo.getTrackSelection(rendererIndex);
+        MappingTrackSelector.MappedTrackInfo info = trackSelections.info;
+        for (int rendererIndex = 0; rendererIndex < trackSelections.length; rendererIndex++) {
+            TrackGroupArray trackGroups = info.getTrackGroups(rendererIndex);
+            TrackSelection trackSelection = trackSelections.get(rendererIndex);
             if (trackGroups.length > 0) {
                 Log.d(TAG, "  Renderer:" + rendererIndex + " [");
                 for (int groupIndex = 0; groupIndex < trackGroups.length; groupIndex++) {
                     TrackGroup trackGroup = trackGroups.get(groupIndex);
                     String adaptiveSupport = getAdaptiveSupportString(
-                            trackGroup.length, trackInfo.getAdaptiveSupport(rendererIndex, groupIndex, false));
+                            trackGroup.length, info.getAdaptiveSupport(rendererIndex, groupIndex, false));
                     Log.d(TAG, "    Group:" + groupIndex + ", adaptive_supported=" + adaptiveSupport + " [");
                     for (int trackIndex = 0; trackIndex < trackGroup.length; trackIndex++) {
                         String status = getTrackStatusString(trackSelection, trackGroup, trackIndex);
                         String formatSupport = getFormatSupportString(
-                                trackInfo.getTrackFormatSupport(rendererIndex, groupIndex, trackIndex));
+                                info.getTrackFormatSupport(rendererIndex, groupIndex, trackIndex));
                         Log.d(TAG, "      " + status + " Track:" + trackIndex + ", "
                                 + getFormatString(trackGroup.getFormat(trackIndex))
                                 + ", supported=" + formatSupport);
@@ -137,7 +142,7 @@ public class EventLogger implements ExoPlayer.EventListener, AudioRendererEventL
             }
         }
         // Log tracks not associated with a renderer.
-        TrackGroupArray trackGroups = trackInfo.getUnassociatedTrackGroups();
+        TrackGroupArray trackGroups = info.getUnassociatedTrackGroups();
         if (trackGroups.length > 0) {
             Log.d(TAG, "  Renderer:None [");
             for (int groupIndex = 0; groupIndex < trackGroups.length; groupIndex++) {
@@ -420,5 +425,4 @@ public class EventLogger implements ExoPlayer.EventListener, AudioRendererEventL
     private static String getTrackStatusString(boolean enabled) {
         return enabled ? "[X]" : "[ ]";
     }
-
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 
 import java.util.Formatter;
@@ -39,7 +40,7 @@ public class PrettyControlView extends RelativeLayout {
     private final Formatter formatter;
     private final Timeline.Window currentWindow;
 
-    private ExoPlayer player;
+    private SimpleExoPlayer player;
     private FullscreenClickListener listener;
 
     private boolean dragging;
@@ -93,7 +94,7 @@ public class PrettyControlView extends RelativeLayout {
      *
      * @param player the {@code ExoPlayer} to control.
      */
-    public void setPlayer(ExoPlayer player) {
+    public void setPlayer(SimpleExoPlayer player) {
         if (this.player != null) {
             this.player.removeListener(componentListener);
         }
@@ -148,9 +149,9 @@ public class PrettyControlView extends RelativeLayout {
             return;
         }
         boolean playing = player != null && player.getPlayWhenReady();
-        playButton.setImageResource(playing ? com.google.android.exoplayer2.R.drawable.ic_media_pause : com.google.android.exoplayer2.R.drawable.ic_media_play);
+        playButton.setImageResource(playing ? com.google.android.exoplayer2.R.drawable.exo_controls_pause : com.google.android.exoplayer2.R.drawable.exo_controls_play);
         playButton.setContentDescription(
-                getResources().getString(playing ? com.google.android.exoplayer2.R.string.pause_description : com.google.android.exoplayer2.R.string.play_description));
+                getResources().getString(playing ? com.google.android.exoplayer2.R.string.exo_controls_pause_description : com.google.android.exoplayer2.R.string.exo_controls_play_description));
     }
 
     private void updateNavigation() {
