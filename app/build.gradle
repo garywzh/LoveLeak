@@ -44,6 +44,7 @@ dependencies {
     compile "com.android.support:support-fragment:$support_version"
     compile "com.android.support:appcompat-v7:$support_version"
     compile "com.android.support:recyclerview-v7:$support_version"
+    compile "com.android.support:preference-v7:$support_version"
     compile "com.android.support:design:$support_version"
 
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'

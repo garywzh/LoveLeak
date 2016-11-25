@@ -1,9 +1,9 @@
 package xyz.garywzh.loveleak.ui;
 
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -21,7 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getFragmentManager().beginTransaction().replace(R.id.settings_container, mFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.settings_container, mFragment).commit();
     }
 
     @Override
@@ -34,13 +34,12 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class PrefsFragment extends PreferenceFragment
+    public static class PrefsFragment extends PreferenceFragmentCompat
             implements Preference.OnPreferenceChangeListener {
         public static final String KEY_PREF_AUTO_PLAY = "auto_play_switch";
 
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             addPreferencesFromResource(R.xml.pref_general);
             findPreference(KEY_PREF_AUTO_PLAY).setOnPreferenceChangeListener(this);
         }
