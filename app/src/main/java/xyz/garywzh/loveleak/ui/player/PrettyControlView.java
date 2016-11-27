@@ -79,7 +79,7 @@ public class PrettyControlView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.view_media_controller, this);
         time = (TextView) findViewById(R.id.time);
         timeCurrent = (TextView) findViewById(R.id.time_current);
-        progressBar = (SeekBar) findViewById(R.id.mediacontroller_progress);
+        progressBar = (SeekBar) findViewById(R.id.media_controller_progress);
         progressBar.setOnSeekBarChangeListener(componentListener);
         progressBar.setMax(PROGRESS_BAR_MAX);
         playButton = (ImageButton) findViewById(R.id.play);

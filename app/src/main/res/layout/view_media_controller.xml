@@ -31,11 +31,10 @@
             android:textColor="@android:color/white" />
 
         <android.support.v7.widget.AppCompatSeekBar
-            android:id="@+id/mediacontroller_progress"
+            android:id="@+id/media_controller_progress"
             android:layout_width="0dp"
             android:layout_height="@dimen/seekbar_height"
-            android:layout_weight="1"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/time"
