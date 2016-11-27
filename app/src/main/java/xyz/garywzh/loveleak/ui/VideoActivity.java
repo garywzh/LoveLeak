@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -56,7 +57,6 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import xyz.garywzh.loveleak.AppContext;
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.model.Comment;
 import xyz.garywzh.loveleak.model.CommentListBean;
@@ -67,6 +67,8 @@ import xyz.garywzh.loveleak.ui.player.EventLogger;
 import xyz.garywzh.loveleak.ui.player.PrettyControlView;
 import xyz.garywzh.loveleak.ui.player.PrettyPlayerView;
 import xyz.garywzh.loveleak.util.LogUtils;
+
+import static xyz.garywzh.loveleak.ui.SettingsActivity.PrefsFragment.KEY_PREF_AUTO_PLAY;
 
 public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventListener,
         PrettyControlView.FullscreenClickListener {
@@ -112,7 +114,8 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        shouldAutoPlay = AppContext.getInstance().getAutoPlay();
+        shouldAutoPlay = PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean(KEY_PREF_AUTO_PLAY, true);
 
         userAgent = Util.getUserAgent(this, "LoveLeak");
         mediaDataSourceFactory = buildDataSourceFactory(true);
