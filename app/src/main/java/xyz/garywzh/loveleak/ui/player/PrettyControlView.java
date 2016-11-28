@@ -34,7 +34,7 @@ public class PrettyControlView extends RelativeLayout {
     private final TextView time;
     private final TextView timeCurrent;
     private final ImageButton fullscreen;
-    private final SeekBar progressBar;
+    private final SeekBar seekBar;
 
     private final StringBuilder formatBuilder;
     private final Formatter formatter;
@@ -79,9 +79,9 @@ public class PrettyControlView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.view_media_controller, this);
         time = (TextView) findViewById(R.id.time);
         timeCurrent = (TextView) findViewById(R.id.time_current);
-        progressBar = (SeekBar) findViewById(R.id.media_controller_progress);
-        progressBar.setOnSeekBarChangeListener(componentListener);
-        progressBar.setMax(PROGRESS_BAR_MAX);
+        seekBar = (SeekBar) findViewById(R.id.media_controller_progress);
+        seekBar.setOnSeekBarChangeListener(componentListener);
+        seekBar.setMax(PROGRESS_BAR_MAX);
         playButton = (ImageButton) findViewById(R.id.play);
         playButton.setOnClickListener(componentListener);
         fullscreen = (ImageButton) findViewById(R.id.fullscreen);
@@ -166,7 +166,7 @@ public class PrettyControlView extends RelativeLayout {
             currentTimeline.getWindow(currentWindowIndex, currentWindow);
             isSeekable = currentWindow.isSeekable;
         }
-        progressBar.setEnabled(isSeekable);
+        seekBar.setEnabled(isSeekable);
     }
 
     private void updateProgress() {
@@ -180,10 +180,10 @@ public class PrettyControlView extends RelativeLayout {
             timeCurrent.setText(stringForTime(position));
         }
         if (!dragging) {
-            progressBar.setProgress(progressBarValue(position));
+            seekBar.setProgress(progressBarValue(position));
         }
         long bufferedPosition = player == null ? 0 : player.getBufferedPosition();
-        progressBar.setSecondaryProgress(progressBarValue(bufferedPosition));
+        seekBar.setSecondaryProgress(progressBarValue(bufferedPosition));
         // Remove scheduled updates.
         removeCallbacks(updateProgressAction);
         // Schedule an update if necessary.

@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#a90208</color>
     <color name="colorAccent">#bb1016</color>
 
+    <color name="progressBlack">#dd000000</color>
+    <color name="progressWhite">#88ffffff</color>
 </resources>
