@@ -1,18 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
-    <style name="AppTheme.BlackStatusBar" parent="AppTheme" />
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.BlackStatusBar" parent="AppTheme.NoActionBar" />
+
+    <!--
+    http://stackoverflow.com/questions/33198014/preferencefragmentcompat-padding-issue-with-style-preferencethemeoverlay
+    -->
+    <style name="AppTheme.PreferenceFix" parent="AppTheme">
+        <item name="preferenceTheme">@style/AppTheme.FixForPreferenceThemeOverlay</item>
+    </style>
+
+    <style name="AppTheme.FixForPreferenceThemeOverlay" parent="PreferenceThemeOverlay">
+        <item name="preferenceFragmentListStyle">@style/AppTheme.FixForPreferenceFragmentList</item>
+    </style>
+
+    <style name="AppTheme.FixForPreferenceFragmentList">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
 
     <style name="Comment.Content" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">#666</item>
