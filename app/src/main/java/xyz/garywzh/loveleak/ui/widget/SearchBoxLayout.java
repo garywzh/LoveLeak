@@ -1,20 +1,26 @@
 package xyz.garywzh.loveleak.ui.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import xyz.garywzh.loveleak.R;
+import xyz.garywzh.loveleak.ui.util.ViewUtils;
 
 public class SearchBoxLayout extends FrameLayout implements View.OnClickListener, TextView.OnEditorActionListener {
     private EditText mQuery;
+    private RelativeLayout mBox;
     private Listener mListener;
 
     public SearchBoxLayout(Context context) {
@@ -38,6 +44,8 @@ public class SearchBoxLayout extends FrameLayout implements View.OnClickListener
 
         setBackgroundResource(android.R.color.transparent);
 
+        mBox = (RelativeLayout) findViewById(R.id.box);
+
         setOnClickListener(this);
         ImageButton mBtnBack = ((ImageButton) findViewById(R.id.action_back));
         ImageButton mBtnClear = ((ImageButton) findViewById(R.id.action_clear));
@@ -50,16 +58,50 @@ public class SearchBoxLayout extends FrameLayout implements View.OnClickListener
 
     public void show() {
         setVisibility(VISIBLE);
-        mQuery.requestFocus();
+        if (Build.VERSION.SDK_INT >= 21) {
+            final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            final int centerX = mBox.getWidth() - ViewUtils.dpToPx(64);
+            final Animator boxAnimator = ViewAnimationUtils.createCircularReveal(mBox,
+                    centerX, mBox.getHeight() / 2, 0, centerX)
+                    .setDuration(animDuration);
+
+            boxAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mQuery.requestFocus();
+                    ViewUtils.showInputMethod(mQuery);
+                }
+            });
+
+            boxAnimator.start();
+        } else {
+            mQuery.requestFocus();
+        }
     }
 
     public void hide() {
-        final InputMethodManager manager = (InputMethodManager) getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.hideSoftInputFromWindow(getWindowToken(), 0);
+        ViewUtils.hideInputMethod(this);
 
-        setVisibility(GONE);
-        mQuery.setText("");
+        if (Build.VERSION.SDK_INT >= 21) {
+            final int animDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            final int centerX = mBox.getWidth() - ViewUtils.dpToPx(64);
+            final Animator boxAnimator = ViewAnimationUtils.createCircularReveal(mBox,
+                    centerX, mBox.getHeight() / 2, centerX, 0)
+                    .setDuration(animDuration);
+
+            boxAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    setVisibility(GONE);
+                    mQuery.setText("");
+                }
+            });
+
+            boxAnimator.start();
+        } else {
+            setVisibility(GONE);
+            mQuery.setText("");
+        }
     }
 
     @Override
