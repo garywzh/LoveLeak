@@ -11,12 +11,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.ui.adapter.VideoListPagerAdapter;
 import xyz.garywzh.loveleak.ui.widget.SearchBoxLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
     private SearchBoxLayout mSearchBox;
 
     @Override
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         initSearchBox();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void initSearchBox() {

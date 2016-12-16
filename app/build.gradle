@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "xyz.garywzh.loveleak"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 6
         versionName "1.5"
     }
@@ -26,17 +26,17 @@ android {
             }
         }
 
-        debug {
-            applicationIdSuffix '.debug'
-            versionNameSuffix '.debug'
-        }
+//        debug {
+//            applicationIdSuffix '.debug'
+//            versionNameSuffix '.debug'
+//        }
     }
     productFlavors {
     }
 }
 
 ext {
-    support_version = '24.2.1'
+    support_version = '25.1.0'
 }
 
 dependencies {
@@ -56,4 +56,6 @@ dependencies {
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.android.exoplayer:exoplayer:r2.0.4'
+    compile 'com.google.firebase:firebase-core:10.0.1'
 }
+apply plugin: 'com.google.gms.google-services'
