@@ -12,7 +12,7 @@ import xyz.garywzh.loveleak.util.LogUtils;
  */
 public class NetworkHelper {
     public static String TAG = NetworkHelper.class.getSimpleName();
-    public static String BASE_URL = "http://www.liveleak.com/";
+    public static String BASE_URL = "https://www.liveleak.com/";
     public static int VIDEO_ONCE_LOAD_COUNT = 12;
     public static int COMMENT_ONCE_LOAD_COUNT = 25;
 
