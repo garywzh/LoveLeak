@@ -7,11 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import java.util.List;
-
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.model.Comment;
 import xyz.garywzh.loveleak.model.VideoItem;
@@ -21,6 +18,7 @@ import xyz.garywzh.loveleak.util.TextStyleUtil;
  * Created by garywzh on 2016/9/17.
  */
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_COMMENT = 1;
     private static final int TYPE_FOOTER = 2;
@@ -66,13 +64,16 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
-            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_header, parent, false);
+            final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_header, parent, false);
             return new HeaderViewHolder(view);
         } else if (viewType == TYPE_COMMENT) {
-            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_comment, parent, false);
+            final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_comment, parent, false);
             return new CommentViewHolder(view);
         } else if (viewType == TYPE_FOOTER) {
-            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_footer, parent, false);
+            final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.view_footer, parent, false);
             return new FooterViewHolder(view);
         } else {
             throw new RuntimeException("wrong view type");
@@ -100,6 +101,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+
         private final TextView title;
         private final TextView userName;
         private final TextView time;
@@ -132,6 +134,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
+
         private final ImageView mAvatar;
         private final TextView mUsername;
         private final TextView mContent;
@@ -148,16 +151,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         void fillData(Comment comment) {
             mUsername.setText(comment.user_name);
-            mContent.setText(TextStyleUtil.clearStyle(comment.text));
+            if (comment.text != null) {
+                mContent.setText(TextStyleUtil.clearStyle(comment.text));
+            }
             mReplyTime.setText(comment.addedon);
 
             Glide.with(mAvatar.getContext()).load(comment.user_profile_image_url)
-                    .placeholder(R.drawable.avatar_default).crossFade()
-                    .into(mAvatar);
+                .placeholder(R.drawable.avatar_default).crossFade()
+                .into(mAvatar);
         }
     }
 
     private static class FooterViewHolder extends RecyclerView.ViewHolder {
+
         FooterViewHolder(View footerView) {
             super(footerView);
         }
