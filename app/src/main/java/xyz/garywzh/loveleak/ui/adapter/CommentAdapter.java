@@ -123,13 +123,17 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         void fillData(VideoItem item) {
-            title.setText(TextStyleUtil.clearStyle(item.title));
+            if (item.title != null) {
+                title.setText(TextStyleUtil.clearStyle(item.title));
+            }
             userName.setText(item.user_name);
             time.setText(item.addedon);
             views.setText(item.times_viewed + " views");
             vote.setText(item.number_of_votes);
             reply.setText(item.number_of_comments);
-            description.setText(TextStyleUtil.clearStyle(item.description));
+            if (item.description != null) {
+                description.setText(TextStyleUtil.clearStyle(item.description));
+            }
         }
     }
 
