@@ -5,9 +5,10 @@ package xyz.garywzh.loveleak.util;
  */
 
 public class TextStyleUtil {
+
     public static String clearStyle(String s) {
         return s.replace("&quot;", "\"")
-                .replace("<span class=\"highlight\">", "")
-                .replace("</span>", "");
+            .replace("<span class=\"highlight\">", "")
+            .replace("</span>", "");
     }
 }
