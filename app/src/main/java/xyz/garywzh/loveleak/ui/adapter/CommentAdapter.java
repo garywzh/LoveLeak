@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import java.util.List;
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.model.Comment;
 import xyz.garywzh.loveleak.model.VideoItem;
+import xyz.garywzh.loveleak.util.LogUtils;
 import xyz.garywzh.loveleak.util.TextStyleUtil;
 
 /**
@@ -26,8 +28,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private VideoItem mVideoItem;
     private List<Comment> mComments;
     private boolean showProgressBar = true;
+    private OnTitleClickListener mListener;
 
-    public CommentAdapter() {
+    public CommentAdapter(OnTitleClickListener listener) {
+        mListener = listener;
         setHasStableIds(true);
     }
 
@@ -66,7 +70,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewType == TYPE_HEADER) {
             final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_header, parent, false);
-            return new HeaderViewHolder(view);
+            return new HeaderViewHolder(view, mListener);
         } else if (viewType == TYPE_COMMENT) {
             final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_comment, parent, false);
@@ -100,7 +104,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder implements
+        OnClickListener {
 
         private final TextView title;
         private final TextView userName;
@@ -109,9 +114,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final TextView vote;
         private final TextView reply;
         private final TextView description;
+        private OnTitleClickListener mListener;
+        private String mWebUrl;
 
-        HeaderViewHolder(View itemView) {
+        HeaderViewHolder(View itemView, OnTitleClickListener listener) {
             super(itemView);
+            mListener = listener;
             title = (TextView) itemView.findViewById(R.id.tv_title);
             userName = (TextView) itemView.findViewById(R.id.tv_user_name);
             time = (TextView) itemView.findViewById(R.id.tv_time);
@@ -126,6 +134,14 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item.title != null) {
                 title.setText(TextStyleUtil.clearStyle(item.title));
             }
+
+            LogUtils.d("viewholder", item.videourl);
+            mWebUrl = item.webUrl();
+
+            if (mWebUrl != null) {
+                LogUtils.d("viewholder", mWebUrl);
+                title.setOnClickListener(this);
+            }
             userName.setText(item.user_name);
             time.setText(item.addedon);
             views.setText(item.times_viewed + " views");
@@ -134,6 +150,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item.description != null) {
                 description.setText(TextStyleUtil.clearStyle(item.description));
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+            mListener.onTitleClicked(mWebUrl);
         }
     }
 
@@ -171,5 +192,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         FooterViewHolder(View footerView) {
             super(footerView);
         }
+    }
+
+    public interface OnTitleClickListener {
+
+        void onTitleClicked(String url);
     }
 }

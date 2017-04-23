@@ -2,6 +2,7 @@ package xyz.garywzh.loveleak.ui;
 
 import static xyz.garywzh.loveleak.ui.SettingsActivity.PrefsFragment.KEY_PREF_AUTO_PLAY;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,12 +63,14 @@ import xyz.garywzh.loveleak.model.CommentListBean;
 import xyz.garywzh.loveleak.model.VideoItem;
 import xyz.garywzh.loveleak.network.NetworkHelper;
 import xyz.garywzh.loveleak.ui.adapter.CommentAdapter;
+import xyz.garywzh.loveleak.ui.adapter.CommentAdapter.OnTitleClickListener;
 import xyz.garywzh.loveleak.ui.player.EventLogger;
 import xyz.garywzh.loveleak.ui.player.PrettyControlView;
 import xyz.garywzh.loveleak.ui.player.PrettyPlayerView;
 import xyz.garywzh.loveleak.util.LogUtils;
 
-public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventListener,
+public class VideoActivity extends AppCompatActivity implements OnTitleClickListener,
+    ExoPlayer.EventListener,
     PrettyControlView.FullscreenClickListener {
 
     private static final String TAG = VideoActivity.class.getSimpleName();
@@ -138,7 +141,7 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
         mCount = 0;
         mComments = new ArrayList<>();
 
-        mAdapter = new CommentAdapter();
+        mAdapter = new CommentAdapter(this);
         mAdapter.setVideoItem(mItem);
         initRecyclerView();
     }
@@ -205,6 +208,13 @@ public class VideoActivity extends AppCompatActivity implements ExoPlayer.EventL
                 }
             }
         });
+    }
+
+    @Override
+    public void onTitleClicked(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override

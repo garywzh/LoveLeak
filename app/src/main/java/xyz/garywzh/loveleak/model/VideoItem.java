@@ -2,29 +2,22 @@ package xyz.garywzh.loveleak.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import xyz.garywzh.loveleak.util.ParseUtil;
 
 /**
  * Created by garywzh on 2016/9/12.
  */
 public class VideoItem implements Parcelable {
 
+    public static final String WEB_URL_PREFIX = "https://m.liveleak.com/view?i=";
+
     /**
-     * vid : 34749899
-     * memberid : 2470706
-     * user_name : bigern666
-     * addedon : 2016-9-11 22:34:00
-     * title : BIGERN666 - 9/11 Wedding
-     * description : We got married today
-     * tags : 9/11, wedding , bigern666, ERNEST acosta, Janna acosta,
-     * category : Other Items from Liveleakers
-     * catid : 24
-     * published : 1
-     * featured : 1
-     * times_viewed : 32007
-     * number_of_votes : 118
-     * number_of_comments : 718
-     * thumburl : https://cdn.liveleak.com/80281E/ll_a_u/thumbs/2016/Sep/11/a3d4db4e4f53_thumb_1.jpg
-     * videourl : https://cdn.liveleak.com/80281E/ll_a_s/2016/Sep/11/LiveLeak-dot-com-27d_1473647436-trimE9CA57E0-8176-439C-B9D2-B17EF06C1A76_1473647472.mov.h264_270p.mp4?d5e8cc8eccfb6039332f41f6249e92b06c91b4db65f5e99818bdd0954b4cd8d4a4ad&ec_rate=230&.mp4
+     * vid : 34749899 memberid : 2470706 user_name : bigern666 addedon : 2016-9-11 22:34:00 title :
+     * BIGERN666 - 9/11 Wedding description : We got married today tags : 9/11, wedding , bigern666,
+     * ERNEST acosta, Janna acosta, category : Other Items from Liveleakers catid : 24 published : 1
+     * featured : 1 times_viewed : 32007 number_of_votes : 118 number_of_comments : 718 thumburl :
+     * https://cdn.liveleak.com/80281E/ll_a_u/thumbs/2016/Sep/11/a3d4db4e4f53_thumb_1.jpg videourl :
+     * https://cdn.liveleak.com/80281E/ll_a_s/2016/Sep/11/LiveLeak-dot-com-27d_1473647436-trimE9CA57E0-8176-439C-B9D2-B17EF06C1A76_1473647472.mov.h264_270p.mp4?d5e8cc8eccfb6039332f41f6249e92b06c91b4db65f5e99818bdd0954b4cd8d4a4ad&ec_rate=230&.mp4
      */
 
     public String vid;
@@ -44,10 +37,23 @@ public class VideoItem implements Parcelable {
     public String thumburl;
     public String videourl;
 
+    public String webUrl() {
+        String s = ParseUtil.parseWebUrl(videourl);
+        if (s != null) {
+            return WEB_URL_PREFIX + s;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         VideoItem videoItem = (VideoItem) o;
 
