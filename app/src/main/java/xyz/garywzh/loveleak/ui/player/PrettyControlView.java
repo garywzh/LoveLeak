@@ -9,16 +9,15 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import java.util.Formatter;
 import java.util.Locale;
-
 import xyz.garywzh.loveleak.R;
 
 /**
@@ -149,9 +148,13 @@ public class PrettyControlView extends RelativeLayout {
             return;
         }
         boolean playing = player != null && player.getPlayWhenReady();
-        playButton.setImageResource(playing ? com.google.android.exoplayer2.R.drawable.exo_controls_pause : com.google.android.exoplayer2.R.drawable.exo_controls_play);
+        playButton.setImageResource(
+            playing ? com.google.android.exoplayer2.R.drawable.exo_controls_pause
+                : com.google.android.exoplayer2.R.drawable.exo_controls_play);
         playButton.setContentDescription(
-                getResources().getString(playing ? com.google.android.exoplayer2.R.string.exo_controls_pause_description : com.google.android.exoplayer2.R.string.exo_controls_play_description));
+            getResources().getString(
+                playing ? com.google.android.exoplayer2.R.string.exo_controls_pause_description
+                    : com.google.android.exoplayer2.R.string.exo_controls_play_description));
     }
 
     private void updateNavigation() {
@@ -159,9 +162,9 @@ public class PrettyControlView extends RelativeLayout {
             return;
         }
         Timeline currentTimeline = player != null ? player.getCurrentTimeline() : null;
-        boolean haveTimeline = currentTimeline != null;
+        boolean haveNonEmptyTimeline = currentTimeline != null && !currentTimeline.isEmpty();
         boolean isSeekable = false;
-        if (haveTimeline) {
+        if (haveNonEmptyTimeline) {
             int currentWindowIndex = player.getCurrentWindowIndex();
             currentTimeline.getWindow(currentWindowIndex, currentWindow);
             isSeekable = currentWindow.isSeekable;
@@ -212,13 +215,13 @@ public class PrettyControlView extends RelativeLayout {
         long hours = totalSeconds / 3600;
         formatBuilder.setLength(0);
         return hours > 0 ? formatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-                : formatter.format("%02d:%02d", minutes, seconds).toString();
+            : formatter.format("%02d:%02d", minutes, seconds).toString();
     }
 
     private int progressBarValue(long position) {
         long duration = player == null ? C.TIME_UNSET : player.getDuration();
         return duration == C.TIME_UNSET || duration == 0 ? 0
-                : (int) ((position * PROGRESS_BAR_MAX) / duration);
+            : (int) ((position * PROGRESS_BAR_MAX) / duration);
     }
 
     private long positionValue(int progress) {
@@ -249,7 +252,7 @@ public class PrettyControlView extends RelativeLayout {
     }
 
     private final class ComponentListener implements ExoPlayer.EventListener,
-            SeekBar.OnSeekBarChangeListener, OnClickListener {
+        SeekBar.OnSeekBarChangeListener, OnClickListener {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -289,6 +292,12 @@ public class PrettyControlView extends RelativeLayout {
         }
 
         @Override
+        public void onTracksChanged(TrackGroupArray trackGroups,
+            TrackSelectionArray trackSelections) {
+            // Do nothing.
+        }
+
+        @Override
         public void onLoadingChanged(boolean isLoading) {
             // Do nothing.
         }
@@ -312,6 +321,7 @@ public class PrettyControlView extends RelativeLayout {
     }
 
     public interface FullscreenClickListener {
+
         void onFullscreenClick();
     }
 }

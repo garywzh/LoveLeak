@@ -1,7 +1,6 @@
 package xyz.garywzh.loveleak.ui.player;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,16 +10,15 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
-
 import xyz.garywzh.loveleak.R;
 
 /**
  * Created by garywzh on 2016/9/15.
  */
 public class PrettyPlayerView extends FrameLayout {
+
     private final View surfaceView;
     private final View shutterView;
     private final AspectRatioFrameLayout layout;
@@ -41,28 +39,16 @@ public class PrettyPlayerView extends FrameLayout {
     public PrettyPlayerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        boolean useTextureView = false;
-        if (attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                    com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView, 0, 0);
-            try {
-                useTextureView = a.getBoolean(com.google.android.exoplayer2.R.styleable.SimpleExoPlayerView_use_texture_view,
-                        useTextureView);
-            } finally {
-                a.recycle();
-            }
-        }
-
         LayoutInflater.from(context).inflate(R.layout.view_pretty_video, this);
         componentListener = new ComponentListener();
         layout = (AspectRatioFrameLayout) findViewById(R.id.video_frame);
         controller = (PrettyControlView) findViewById(R.id.control);
         shutterView = findViewById(R.id.shutter);
 
-        View view = useTextureView ? new TextureView(context) : new SurfaceView(context);
+        View view = new SurfaceView(context);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(params);
         surfaceView = view;
         layout.addView(surfaceView, 0);
@@ -161,7 +147,7 @@ public class PrettyPlayerView extends FrameLayout {
 
         @Override
         public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees,
-                                       float pixelWidthHeightRatio) {
+            float pixelWidthHeightRatio) {
             float aspectRatio = height == 0 ? 1 : (width * pixelWidthHeightRatio) / height;
             isPortrait = aspectRatio < 1;
             layout.setAspectRatio(aspectRatio);
@@ -170,11 +156,6 @@ public class PrettyPlayerView extends FrameLayout {
         @Override
         public void onRenderedFirstFrame() {
             shutterView.setVisibility(GONE);
-        }
-
-        @Override
-        public void onVideoTracksDisabled() {
-            shutterView.setVisibility(VISIBLE);
         }
     }
 }
