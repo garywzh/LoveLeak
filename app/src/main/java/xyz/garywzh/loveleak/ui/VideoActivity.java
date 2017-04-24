@@ -1,6 +1,7 @@
 package xyz.garywzh.loveleak.ui;
 
 import static xyz.garywzh.loveleak.ui.SettingsActivity.PrefsFragment.KEY_PREF_AUTO_PLAY;
+import static xyz.garywzh.loveleak.ui.SettingsActivity.PrefsFragment.KEY_PREF_MOBILE;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -93,6 +94,7 @@ public class VideoActivity extends AppCompatActivity implements OnTitleClickList
     private boolean playerNeedsSource;
 
     private boolean shouldAutoPlay;
+    private boolean useMobile;
     private boolean isTimelineStatic;
     private int playerWindow;
     private long playerPosition;
@@ -114,8 +116,11 @@ public class VideoActivity extends AppCompatActivity implements OnTitleClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         shouldAutoPlay = PreferenceManager.getDefaultSharedPreferences(this)
             .getBoolean(KEY_PREF_AUTO_PLAY, true);
+        useMobile = PreferenceManager.getDefaultSharedPreferences(this)
+            .getBoolean(KEY_PREF_MOBILE, true);
 
         userAgent = Util.getUserAgent(this, "LoveLeak");
         mediaDataSourceFactory = buildDataSourceFactory(true);
@@ -211,10 +216,13 @@ public class VideoActivity extends AppCompatActivity implements OnTitleClickList
     }
 
     @Override
-    public void onTitleClicked(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
+    public void onTitleClicked() {
+        String url = VideoItem.buildWebUrl(mItem.videourl, useMobile);
+        if (url != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
     }
 
     @Override

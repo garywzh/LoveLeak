@@ -9,7 +9,8 @@ import xyz.garywzh.loveleak.util.ParseUtil;
  */
 public class VideoItem implements Parcelable {
 
-    public static final String WEB_URL_PREFIX = "https://m.liveleak.com/view?i=";
+    public static final String WEB_URL_PREFIX = "https://www.liveleak.com/view?i=";
+    public static final String MOBILE_WEB_URL_PREFIX = "https://m.liveleak.com/view?i=";
 
     /**
      * vid : 34749899 memberid : 2470706 user_name : bigern666 addedon : 2016-9-11 22:34:00 title :
@@ -37,10 +38,14 @@ public class VideoItem implements Parcelable {
     public String thumburl;
     public String videourl;
 
-    public String webUrl() {
-        String s = ParseUtil.parseWebUrl(videourl);
+    public static String buildWebUrl(String videoUrl, Boolean useMobile) {
+        String s = ParseUtil.parseWebUrl(videoUrl);
         if (s != null) {
-            return WEB_URL_PREFIX + s;
+            if (useMobile) {
+                return MOBILE_WEB_URL_PREFIX + s;
+            } else {
+                return WEB_URL_PREFIX + s;
+            }
         } else {
             return null;
         }

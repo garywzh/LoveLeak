@@ -13,7 +13,6 @@ import java.util.List;
 import xyz.garywzh.loveleak.R;
 import xyz.garywzh.loveleak.model.Comment;
 import xyz.garywzh.loveleak.model.VideoItem;
-import xyz.garywzh.loveleak.util.LogUtils;
 import xyz.garywzh.loveleak.util.TextStyleUtil;
 
 /**
@@ -115,12 +114,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final TextView reply;
         private final TextView description;
         private OnTitleClickListener mListener;
-        private String mWebUrl;
 
         HeaderViewHolder(View itemView, OnTitleClickListener listener) {
             super(itemView);
             mListener = listener;
             title = (TextView) itemView.findViewById(R.id.tv_title);
+            title.setOnClickListener(this);
             userName = (TextView) itemView.findViewById(R.id.tv_user_name);
             time = (TextView) itemView.findViewById(R.id.tv_time);
             views = (TextView) itemView.findViewById(R.id.tv_views);
@@ -134,14 +133,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (item.title != null) {
                 title.setText(TextStyleUtil.clearStyle(item.title));
             }
-
-            LogUtils.d("viewholder", item.videourl);
-            mWebUrl = item.webUrl();
-
-            if (mWebUrl != null) {
-                LogUtils.d("viewholder", mWebUrl);
-                title.setOnClickListener(this);
-            }
             userName.setText(item.user_name);
             time.setText(item.addedon);
             views.setText(item.times_viewed + " views");
@@ -154,7 +145,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View v) {
-            mListener.onTitleClicked(mWebUrl);
+            mListener.onTitleClicked();
         }
     }
 
@@ -196,6 +187,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnTitleClickListener {
 
-        void onTitleClicked(String url);
+        void onTitleClicked();
     }
 }

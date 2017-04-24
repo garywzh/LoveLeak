@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
-
 import xyz.garywzh.loveleak.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -32,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class PrefsFragment extends PreferenceFragmentCompat {
         public static final String KEY_PREF_AUTO_PLAY = "auto_play_switch";
+        public static final String KEY_PREF_MOBILE = "mobile_switch";
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
