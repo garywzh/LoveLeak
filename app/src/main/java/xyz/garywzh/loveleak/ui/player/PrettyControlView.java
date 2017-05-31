@@ -25,6 +25,8 @@ import xyz.garywzh.loveleak.R;
  */
 public class PrettyControlView extends RelativeLayout {
 
+    public static final String TAG = PrettyControlView.class.getSimpleName();
+
     public static final int DEFAULT_SHOW_DURATION_MS = 3000;
     private static final int PROGRESS_BAR_MAX = 1000;
 
@@ -147,7 +149,12 @@ public class PrettyControlView extends RelativeLayout {
         if (!isVisible()) {
             return;
         }
-        boolean playing = player != null && player.getPlayWhenReady();
+        boolean playing = false;
+        if (player != null
+            && player.getPlaybackState() != ExoPlayer.STATE_ENDED
+            && player.getPlayWhenReady()) {
+            playing = true;
+        }
         playButton.setImageResource(
             playing ? com.google.android.exoplayer2.R.drawable.exo_controls_pause
                 : com.google.android.exoplayer2.R.drawable.exo_controls_play);
@@ -276,13 +283,14 @@ public class PrettyControlView extends RelativeLayout {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if (playbackState == ExoPlayer.STATE_ENDED && player != null) {
+                player.setPlayWhenReady(false);
+            }
             show();
         }
 
         @Override
         public void onPositionDiscontinuity() {
-            updateNavigation();
-            updateProgress();
         }
 
         @Override
@@ -309,8 +317,18 @@ public class PrettyControlView extends RelativeLayout {
 
         @Override
         public void onClick(View view) {
-            if (playButton == view) {
-                player.setPlayWhenReady(!player.getPlayWhenReady());
+            if (playButton == view && player != null) {
+                if (player.getPlaybackState() == ExoPlayer.STATE_ENDED) {
+                    player.seekTo(0);
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            player.setPlayWhenReady(true);
+                        }
+                    }, 100);
+                } else {
+                    player.setPlayWhenReady(!player.getPlayWhenReady());
+                }
             } else if (fullscreen == view) {
                 listener.onFullscreenClick();
             }
